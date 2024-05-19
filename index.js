@@ -8,8 +8,8 @@ const maxGuessesMessage = document.getElementById('max-guesses');
 const numberOfGuessesMessage = document.getElementById('number-of-guesses');
 const correctMessage = document.getElementById('correct');
 
-let targetNumber;
-let attempts = 0;
+let targetNumber; // declared targetNumber
+let attempts = 0; // attempts set to 0 then counter set to 5 for attempts
 const maxNumberOfAttempts = 5;
 
 // Returns a random number from min (inclusive) to max (exclusive)
@@ -27,57 +27,70 @@ function checkGuess() {
   const guess = parseInt(guessInput.value, 10);
   attempts = attempts + 1;
 
-  hideAllMessages();
+  const remainingAttempts = maxNumberOfAttempts - attempts;
+
+  //this hide function not working. Does it need moved down after creating the function?
+  // I didn't notice a difference when I uncommented it again.
+//hideAllMessages();
 
   if (guess === targetNumber) {
-    numberOfGuessesMessage.style.display = '';
-    numberOfGuessesMessage.innerHTML = `You made ${attempts} guesses`;
-
+    // numberOfGuessesMessage.style.display = "none";
+    // numberOfGuessesMessage.innerHTML = `You made ${attempts} guesses`;
+    tooHighMessage.style.display = 'none';
+    tooLowMessage.style.display = 'none';
     correctMessage.style.display = '';
 
     submitButton.disabled = true;
     guessInput.disabled = true;
   }
 
-  if (guess !== targetNumber) {
-    if (guess < targetNumber) {
+  //moved the lines around and created another else if so that when guessed correclty it doesn't show the attempts left or other lines 
+  else if (guess !== targetNumber && guess < targetNumber) {
       tooLowMessage.style.display = '';
-    } else {
-      tooLowMessage.style.display = '';
+      tooHighMessage.style.display = 'none';
+          // Do I need to move this bottom section within the second if statement so that it doesn't show this for the first if statement?
+
+    //set this bottom line equal to "none" 
+    numberOfGuessesMessage.style.display = "";
+    numberOfGuessesMessage.innerHTML = `You guessed ${guess}. <br> ${remainingAttempts} guesses remaining`;
+    } 
+    else if (guess !== targetNumber && guess > targetNumber){
+      numberOfGuessesMessage.style.display = "";
+      numberOfGuessesMessage.innerHTML = `You guessed ${guess}. <br> ${remainingAttempts} guesses remaining`;
+      tooLowMessage.style.display = 'none';
+      tooHighMessage.style.display='';
     }
 
-    const remainingAttempts = maxNumberOfAttempts - attempts;
-
-    numberOfGuessesMessage.style.display = '';
-    numberOfGuessesMessage.innerHTML = `You guessed ${guess}. <br> ${remainingAttempts} guesses remaining`;
-  }
-
-  if (attempts ==== maxNumberOfAttempts) {
-    submitButton.disabled = true;
-    guessInput.disabled = true;
-  }
-
-  guessInput.value = '';
-
-  resetButton.style.display = '';
+  
+//line below had 4 equal signs
+if (attempts === maxNumberOfAttempts) {
+  submitButton.disabled = true;
+  guessInput.disabled = true;
 }
 
+guessInput.value = '';
+
+resetButton.style.display = '';
+}
 function hideAllMessages() {
-  for (let elementIndex = 0; elementIndex <= messages.length; elementIndex++) {
+  //removed <= from elementIndex < messages.length;
+  for (let elementIndex = 0; elementIndex < messages.length; elementIndex++) {
     messages[elementIndex].style.display = 'none';
   }
 }
 
-funtion setup() {
+//the word function below was misspelled
+function setup() {
   // Get random number
   targetNumber = getRandomNumber(1, 100);
   console.log(`target number: ${targetNumber}`);
 
   // Reset number of attempts
-  maxNumberOfAttempts = 0;
+  attempts = 0;
 
   // Enable the input and submit button
-  submitButton.disabeld = false;
+  //disabled in first line was misspelled
+  submitButton.disabled = false;
   guessInput.disabled = false;
 
   hideAllMessages();
@@ -88,3 +101,5 @@ submitButton.addEventListener('click', checkGuess);
 resetButton.addEventListener('click', setup);
 
 setup();
+
+
